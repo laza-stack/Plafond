@@ -1,0 +1,199 @@
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Habillage Ambatolampy</title>
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+}
+
+body{
+font-family: Arial, sans-serif;
+color:white;
+background:black;
+overflow-x:hidden;
+}
+
+/* BACKGROUND FIXED */
+.bg{
+position:fixed;
+inset:0;
+background-image:url('https://images.unsplash.com/photo-1520034475321-cbe63696469a');
+background-size:cover;
+background-position:center;
+transform:scale(1.1);
+filter:brightness(0.35) contrast(1.2);
+}
+
+/* DARK LAYER */
+.overlay{
+position:fixed;
+inset:0;
+background:radial-gradient(circle at center, rgba(0,0,0,0.35), rgba(0,0,0,0.92));
+}
+
+/* FLOAT LIGHTS */
+.light{
+position:fixed;
+border-radius:50%;
+filter:blur(80px);
+opacity:0.6;
+animation:float 6s ease-in-out infinite;
+pointer-events:none;
+}
+
+.light1{
+width:200px;
+height:200px;
+top:10%;
+left:10%;
+background:rgba(255,200,0,0.25);
+}
+
+.light2{
+width:260px;
+height:260px;
+bottom:10%;
+right:10%;
+background:rgba(0,170,255,0.2);
+animation-delay:2s;
+}
+
+@keyframes float{
+0%,100%{transform:translateY(0);}
+50%{transform:translateY(-15px);}
+}
+
+/* MAIN WRAPPER (IMPORTANT FIX) */
+.wrapper{
+min-height:100vh;
+display:flex;
+justify-content:center;
+align-items:center;
+padding:40px 20px;
+position:relative;
+z-index:2;
+}
+
+/* CONTENT BOX */
+.content{
+text-align:center;
+max-width:800px;
+}
+
+/* TITLE */
+h2{
+font-size:20px;
+opacity:0;
+animation:fadeIn 1.5s forwards;
+}
+
+h1{
+font-size:48px;
+letter-spacing:3px;
+color:#ffd54a;
+margin-top:10px;
+text-shadow:0 0 20px rgba(255,215,0,0.5);
+opacity:0;
+animation:slideUp 1.5s forwards 0.5s;
+}
+
+/* TEXT */
+p{
+margin-top:15px;
+font-size:16px;
+color:#ddd;
+opacity:0;
+animation:fadeIn 1.5s forwards 1s;
+}
+
+.list{
+margin-top:15px;
+color:#bbb;
+opacity:0;
+animation:fadeIn 1.5s forwards 1.2s;
+}
+
+/* BUTTON */
+.button{
+margin-top:30px;
+padding:14px 30px;
+border:none;
+border-radius:40px;
+font-weight:bold;
+background:linear-gradient(45deg,#ffd54a,#ffb300);
+cursor:pointer;
+transition:0.3s;
+opacity:0;
+animation:fadeIn 1.5s forwards 1.6s;
+}
+
+.button:hover{
+transform:scale(1.08);
+}
+
+/* ANIMATIONS */
+@keyframes fadeIn{
+from{opacity:0;}
+to{opacity:1;}
+}
+
+@keyframes slideUp{
+from{opacity:0; transform:translateY(30px);}
+to{opacity:1; transform:translateY(0);}
+}
+
+/* MOBILE FIX */
+@media (max-width:768px){
+h1{
+font-size:32px;
+}
+p, .list{
+font-size:14px;
+}
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="bg"></div>
+<div class="overlay"></div>
+
+<div class="light light1"></div>
+<div class="light light2"></div>
+
+<div class="wrapper">
+
+<div class="content">
+
+<h2>Miarahaba tompoko oh 👋</h2>
+
+<h1>HABILLAGE AMBATOLAMPY</h1>
+
+<p>
+Ity site ity dia natao :
+</p>
+
+<div class="list">
+<p>1) Hijerenao ireo karazana plafond.</p>
+<p>2) Ireo karazana asa service mifandray amin'izany.</p>
+</div>
+
+<a href="page2.html">
+  <button class="button">Hijery karazany →</button>
+</a>
+</a>
+</div>
+
+</div>
+
+</body>
+</html>
