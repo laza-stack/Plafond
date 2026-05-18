@@ -28,7 +28,7 @@ background-image:url('https://images.unsplash.com/photo-1520034475321-cbe6369646
 background-size:cover;
 background-position:center;
 transform:scale(1.1);
-filter:brightness(0.35) contrast(1.2);
+filter:brightness(0.85) contrast(1.2);
 }
 
 /* DARK LAYER */
@@ -158,7 +158,9 @@ p, .list{
 font-size:14px;
 }
 }
-
+.bg {
+  transition: background-image 1s ease-in-out;
+}
 </style>
 </head>
 
@@ -176,7 +178,7 @@ font-size:14px;
 
 <h2>Miarahaba tompoko oh 👋</h2>
 
-<h1>HABILLAGE AMBATOLAMPY</h1>
+<h1>HABILLAGE AMBATOLAMPY 104</h1>
 
 <p>
 Ity site ity dia natao :
@@ -194,6 +196,26 @@ Ity site ity dia natao :
 </div>
 
 </div>
+<script>
+const images = [
+  "phot1.jpg",  // remplace par ta 1ère image
+  "phot2.jpg"   // remplace par ta 2ème image
+];
 
+let index = 0;
+const bg = document.querySelector(".bg");
+
+// Fonction de changement
+function changeBackground() {
+  bg.style.backgroundImage = `url('${images[index]}')`;
+  index = (index + 1) % images.length;
+}
+
+// image initiale
+changeBackground();
+
+// changement toutes les 5 secondes (5000 ms)
+setInterval(changeBackground, 5000);
+</script>
 </body>
 </html>
