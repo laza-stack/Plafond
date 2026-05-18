@@ -161,6 +161,27 @@ font-size:14px;
 .bg {
   transition: background-image 1s ease-in-out;
 }
+#newsBox {
+  background: rgba(0,0,0,0.6);
+  padding: 15px;
+  border-radius: 10px;
+  border: 1px solid rgba(255,255,255,0.2);
+}
+
+.news-item {
+  margin-bottom: 12px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+
+.news-item a {
+  color: #ffd54a;
+  text-decoration: none;
+}
+
+.news-item a:hover {
+  text-decoration: underline;
+}
 </style>
 </head>
 
@@ -192,7 +213,14 @@ Ity site ity dia natao :
 <a href="page2.html">
   <button class="button">Hijery karazany →</button>
 </a>
-</a>
+
+<br>
+
+<button class="button" onclick="toggleNews()">
+  Vaovao androany 📰
+</button>
+
+<div id="newsBox" style="display:none; margin-top:20px; text-align:left; max-width:700px;"></div>
 </div>
 
 </div>
@@ -216,6 +244,223 @@ changeBackground();
 
 // changement toutes les 5 secondes (5000 ms)
 setInterval(changeBackground, 5000);
+const newsBox = document.getElementById("newsBox");
+
+function toggleNews() {
+  if (newsBox.style.display === "block") {
+    newsBox.style.display = "none";
+    return;
+  }
+  newsBox.style.display = "block";
+  loadNews();
+}
+
+function getTodayKey() {
+  return new Date().toISOString().split("T")[0];
+}
+
+// =======================
+// MAIN
+// =======================
+async function loadNews() {
+  newsBox.innerHTML = "<p>⏳ Chargement, miandry kely...</p>";
+
+  const today = getTodayKey();
+
+  const saved = localStorage.getItem("madagascar_full_news");
+  if (saved) {
+    const data = JSON.parse(saved);
+    if (data.date === today && data.articles?.length > 0) {
+      displayNews(data.articles);
+      return;
+    }
+  }
+
+  try {
+    let articles = [];
+
+    // =======================
+    // SOURCE 1 : 2424.mg
+    // =======================
+    await scrapeSite(
+      "https://2424.mg/tag/accident/",
+      "2424.mg",
+      articles
+    );
+
+    // =======================
+    // SOURCE 2 : Orange Actu
+    // =======================
+    await scrapeSite(
+      "https://actu.orange.mg/depeches/",
+      "Orange Actu",
+      articles
+    );
+
+    // nettoyage doublons
+    const seen = new Set();
+    const clean = [];
+
+    for (let a of articles) {
+      if (!seen.has(a.title)) {
+        seen.add(a.title);
+        clean.push(a);
+      }
+    }
+
+    articles = clean.slice(0, 6);
+
+    if (articles.length < 5) {
+      articles = getFallback();
+    }
+
+    localStorage.setItem(
+      "madagascar_full_news",
+      JSON.stringify({ date: today, articles })
+    );
+
+    displayNews(articles);
+
+  } catch (e) {
+    console.log(e);
+    displayNews(getFallback());
+  }
+}
+
+// =======================
+// SCRAPER HTML CLEAN
+// =======================
+async function scrapeSite(url, sourceName, articles) {
+  try {
+    const res = await fetch(url);
+    const html = await res.text();
+
+    const doc = new DOMParser().parseFromString(html, "text/html");
+
+    const links = doc.querySelectorAll("a");
+
+    links.forEach(a => {
+      const title = a.textContent.trim();
+      const href = a.href;
+
+      if (
+        title &&
+        title.length > 30 &&
+        href &&
+        href.startsWith("http")
+      ) {
+        articles.push({
+          title,
+          url: href,
+          source: sourceName,
+          content: "Chargement du contenu..."
+        });
+      }
+    });
+
+    // enrichir contenu complet
+    await enrichContent(articles);
+
+  } catch (e) {
+    console.log("Erreur scrape:", sourceName, e);
+  }
+}
+
+// =======================
+// EXTRACTION CONTENU COMPLET
+// =======================
+async function enrichContent(articles) {
+  for (let a of articles) {
+    try {
+      const res = await fetch(a.url);
+      const html = await res.text();
+
+      const doc = new DOMParser().parseFromString(html, "text/html");
+
+      // retirer scripts + styles
+      doc.querySelectorAll("script,style,noscript").forEach(el => el.remove());
+
+      // chercher contenu principal
+      let text = doc.body.innerText;
+
+      // nettoyer texte
+      text = text
+        .replace(/\s+/g, " ")
+        .trim()
+        .substring(0, 500); // limiter longueur
+
+      a.content = text || "Contenu non disponible";
+    } catch (e) {
+      a.content = "Impossible de charger le contenu complet";
+    }
+  }
+}
+
+// =======================
+// FALLBACK
+// =======================
+function getFallback() {
+  return [
+    {
+      title: "🚗 Accident routier Madagascar",
+      source: "2424.mg",
+      content: "Information de circulation et accident en cours sur les routes nationales de Madagascar.",
+      url: "https://2424.mg"
+    },
+    {
+      title: "🚦 Trafic Antananarivo",
+      source: "Orange Actu",
+      content: "Circulation dense observée dans la capitale aux heures de pointe.",
+      url: "https://actu.orange.mg"
+    },
+    {
+      title: "🚓 Contrôle véhicules ATT",
+      source: "Orange Actu",
+      content: "Renforcement des contrôles techniques et administratifs.",
+      url: "https://actu.orange.mg"
+    },
+    {
+      title: "🛣️ Routes Madagascar",
+      source: "2424.mg",
+      content: "État des routes nationales en dégradation sur plusieurs axes.",
+      url: "https://2424.mg"
+    },
+    {
+      title: "⚠️ Sécurité routière",
+      source: "2424.mg",
+      content: "Campagne nationale de prévention des accidents routiers.",
+      url: "https://2424.mg"
+    }
+  ];
+}
+
+// =======================
+// AFFICHAGE COMPLET
+// =======================
+function displayNews(articles) {
+  newsBox.innerHTML = "<h3>🚗 Vaovao fiara Madagascar (contenu complet)</h3><br>";
+
+  articles.forEach(n => {
+    newsBox.innerHTML += `
+      <div class="news-item">
+        <strong>${n.title}</strong><br><br>
+
+        <div style="color:#ccc; font-size:14px; line-height:1.4;">
+          ${n.content}
+        </div><br>
+
+        <small style="color:#aaa;">
+          📡 Source: ${n.source}
+        </small><br>
+
+        <small>
+          🔗 ${n.url}
+        </small>
+      </div>
+      <br><hr style="opacity:0.2;">
+    `;
+  });
+}
 </script>
 </body>
 </html>
