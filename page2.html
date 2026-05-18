@@ -461,5 +461,77 @@
     </a>
 
 </div>
+<!-- CONTACT DEVELOPPEUR (VERSION PRO) -->
+<div style="text-align:center; margin-top:60px; padding-bottom:30px;">
+
+    <button onclick="document.getElementById('devInfo').style.display='block'"
+        style="
+            position: relative;
+            padding: 14px 26px;
+            background: linear-gradient(135deg, #0ea5e9, #1e293b);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            font-weight: bold;
+            font-size: 15px;
+            cursor: pointer;
+            box-shadow: 0 10px 25px rgba(14,165,233,0.35);
+            transition: all 0.3s ease;
+            overflow: hidden;
+        "
+        onmouseover="this.style.transform='scale(1.05)'; this.style.boxShadow='0 15px 35px rgba(14,165,233,0.55)'"
+        onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 10px 25px rgba(14,165,233,0.35)'"
+    >
+        👨‍💻 Contacter le développeur
+    </button>
+
+    <!-- BOX INFO DEV -->
+    <div id="devInfo"
+        style="
+            display:none;
+            margin-top:25px;
+            background: rgba(30, 41, 59, 0.95);
+            backdrop-filter: blur(10px);
+            color:white;
+            padding:22px;
+            border-radius:16px;
+            max-width:360px;
+            margin-left:auto;
+            margin-right:auto;
+            text-align:left;
+            border:1px solid rgba(14,165,233,0.3);
+            box-shadow:0 15px 35px rgba(0,0,0,0.4);
+            animation: fadeIn 0.3s ease-in-out;
+        ">
+
+        <h3 style="margin-top:0; color:#0ea5e9;">
+            ⚡ Développeur
+        </h3>
+
+        <p style="margin:8px 0;">📧 Email :</p>
+        <a href="mailto:lazadiah@gmal.com"
+           style="color:#f8fafc; text-decoration:none;">
+           lazadiah@gmal.com
+        </a>
+
+        <p style="margin:12px 0 8px;">📞 Téléphone :</p>
+        <a href="tel:+261330608880"
+           style="color:#f8fafc; text-decoration:none;">
+           +261 33 060 888 0
+        </a>
+
+        <div style="margin-top:15px; font-size:12px; color:#94a3b8;">
+            Disponible pour projets web & apps 🚀
+        </div>
+    </div>
+</div>
+
+<!-- ANIMATION -->
+<style>
+@keyframes fadeIn {
+    from {opacity:0; transform: translateY(10px);}
+    to {opacity:1; transform: translateY(0);}
+}
+</style>
 </body>
 </html>
